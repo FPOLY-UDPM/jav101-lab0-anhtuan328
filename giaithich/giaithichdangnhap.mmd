@@ -1,0 +1,36 @@
+sequenceDiagram
+     autonumber
+     actor User as Người dùng (Browser)
+    participant V as View (form_dang_nhap.jsp)
+    participant C as Controller (LoginServlet)
+   participant M as Model (UserDAO)
+    participant DB as Database (SQL Server/MySQL)
+    participant Home as View (index.jsp)
+
+     User->>V: Truy cập trang đăng nhập
+     V-->>User: Hiển thị form (Username, Password)
+
+     User->>C: Nhập thông tin & Click "Login" (POST /xuly_dangnhap)
+     activate C
+
+     C->>C: Lấy tham số (txt_username, txt_password)
+
+     C->>M: Gọi hàm kiểm tra checkLogin(user, pass)
+     activate M
+     M->>DB: Thực thi Query (SELECT * FROM Users WHERE...)
+     DB-->>M: Trả về kết quả (User object hoặc null)
+     M-->>C: Trả về kết quả xác thực
+     deactivate M
+
+     alt Đăng nhập Thành công
+         C->>C: Lưu thông tin User vào Session
+       C-->>User: Redirect sang trang chủ (index.jsp)
+         User->>Home: Tải trang chủ
+         Home-->>User: Hiển thị giao diện Dashboard
+     else Đăng nhập Thất bại
+         C->>C: Lưu thông báo lỗi vào Request Attribute
+         C->>V: Forward (chuyển tiếp) về lại trang đăng nhập
+         V-->>User: Hiển thị thông báo "Sai tài khoản hoặc mật khẩu"
+     end
+
+     deactivate C
