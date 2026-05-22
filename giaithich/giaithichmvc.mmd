@@ -1,0 +1,24 @@
+sequenceDiagram
+         actor User as Người dùng (Browser)
+     participant C as Controller (Servlet)
+         participant M as Model (Java Class/DAO)
+         participant DB as Database
+         participant V as View (JSP)
+
+         User->>C: 1. Gửi HTTP Request (URL/Form)
+         activate C
+        C->>M: 2. Gọi logic nghiệp vụ/truy vấn dữ liệu
+        activate M
+        M->>DB: 3. Truy vấn dữ liệu (nếu cần)
+        DB-->>M: 4. Trả về kết quả
+        M-->>C: 5. Trả về dữ liệu (DTO/Entity/List)
+        deactivate M
+
+        C->>C: 6. Lưu dữ liệu vào Request/Session Attribute
+
+        C->>V: 7. Forward (chuyển tiếp) tới View
+        activate V
+        V->>V: 8. Đổ dữ liệu vào mã HTML (Dùng JSTL/EL)
+        V-->>User: 9. Trả về HTTP Response (Giao diện HTML)
+        deactivate V
+        deactivate C
