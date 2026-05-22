@@ -1,4 +1,4 @@
 package fpoly.servlet;
 
-public class servlet  giaithich{
+public class servlet  {
 }
